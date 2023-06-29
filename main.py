@@ -17,8 +17,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # База данных с пользователями и их зарплатами
 users_db = {
-    "john": {"password": "secret", "salary": 50000, "next_raise": "2023-09-01"},
-    "jane": {"password": "password", "salary": 60000, "next_raise": "2023-10-01"}
+    "ivan": {"password": "12345", "salary": 50000, "next_raise": "2023-09-01"},
+    "vova": {"password": "54321", "salary": 60000, "next_raise": "2023-10-01"},
+    "oleg": {"password": "qwerty", "salary": 70000, "next_raise": "2023-11-01"},
+    "masha": {"password": "ytrewq", "salary": 80000, "next_raise": "2023-12-01"},
 }
 
 # Словарь для хранения активных токенов
