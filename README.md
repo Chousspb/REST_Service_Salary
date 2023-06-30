@@ -39,10 +39,12 @@ poetry run uvicorn main:app --host 0.0.0.0 --port 8000
    git clone https://gitlab.com/Chousspb/REST_Service_Salary.git
 
 2. Перейдите в директорию проекта:
+
    ```bash
    cd repository
 
 4. Открыть терминал и выполнить следующую команду для сборки и запуска контейнера:
+
    ```bash
    docker-compose up --build
 
