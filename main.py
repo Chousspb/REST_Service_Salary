@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import uvicorn
 import secrets
 
- # Инициализируем FastAPI и создаем экземпляр шаблонизатора
+# Инициализируем FastAPI и создаем экземпляр шаблонизатора
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
@@ -40,24 +40,25 @@ async def login(request: Request, username: str = Form(...), password: str = For
         return templates.TemplateResponse("token.html", {"request": request, "token": token})
     else:
         # Логин и пароль неверные
-        return templates.TemplateResponse("login.html", {"request": request, "error_message": "Логин или пароль неверные"})
+        return templates.TemplateResponse("login.html",
+                                          {"request": request, "error_message": "Логин или пароль неверные"})
 
 
 @app.get("/salary", response_class=HTMLResponse)
 async def get_salary(request: Request, token: str):
     # Проверяем, что токен действительный и не истек
     if token not in active_tokens:
-        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        return templates.TemplateResponse("wrong.html", {"request": request})
 
     token_data = active_tokens[token]
     username = token_data["username"]
     created_at = token_data["created_at"]
     elapsed_time = datetime.now() - created_at
-    token_lifetime = timedelta(minutes=30)  # Устанавливаем желаемое время жизни токена
+    token_lifetime = timedelta(minutes=1)  # Устанавливаем желаемое время жизни токена
 
     if elapsed_time > token_lifetime:
         del active_tokens[token]  # Удаляем просроченный токен
-        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Token expired")
+        return templates.TemplateResponse("expired.html", {"request": request})
 
     user_data = users_db.get(username)
 
@@ -65,19 +66,21 @@ async def get_salary(request: Request, token: str):
         salary = user_data["salary"]
         next_raise = user_data["next_raise"]
 
-        return templates.TemplateResponse("salary.html", {"request": request, "salary": salary, "next_raise": next_raise})
+        return templates.TemplateResponse("salary.html",
+                                          {"request": request, "salary": salary, "next_raise": next_raise})
 
     raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="User not found")
 
-@app.get("/", response_class=HTMLResponse) # Добавляем HTMLResponse, чтобы возвращать HTML-страницу
+
+@app.get("/", response_class=HTMLResponse)  # HTMLResponse, чтобы возвращать HTML-страницу
 async def index(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 
-def generate_token(): # Функция для генерации токена
+def generate_token():  # Функция для генерации токена
     example_token = secrets.token_hex(16)
     return example_token
 
 
-if __name__ == "__main__": # Запуск приложения
+if __name__ == "__main__":  # Запуск приложения
     uvicorn.run("main:app", host="0.0.0.0", port=8000)
