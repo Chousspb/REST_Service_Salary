@@ -2,11 +2,14 @@
 <html>
 <head>
     <title>Salary Page</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
     <h1>Зарплата:</h1>
     <p>{{ salary }}</p>
     <h1>Дата следующего повышения:</h1>
     <p>{{ next_raise }}</p>
+    <a href="/token?token={{ token }}">Назад</a>
+    <a href="http://0.0.0.0:8000/" class="button">Перейти на страницу входа</a>
 </body>
 </html>

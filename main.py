@@ -69,7 +69,7 @@ async def get_salary(request: Request, token: str):
         return templates.TemplateResponse("salary.html",
                                           {"request": request, "salary": salary, "next_raise": next_raise})
 
-    raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="User not found")
+    raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Пользователь не найден")
 
 
 @app.get("/", response_class=HTMLResponse)  # HTMLResponse, чтобы возвращать HTML-страницу
